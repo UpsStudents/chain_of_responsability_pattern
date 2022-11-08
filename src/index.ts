@@ -79,31 +79,37 @@ const sendFlag = true;
 
 let handlerIni = null;
 
+const logInDBHandler = new LogInDBHandler();
+const sMSHandler = new SMSHandler();
+const emailHandler = new EmailHandler();
+const sendHandler = new SendHandler();
+
+
 if(logInDBFlag){
-    handlerIni = new LogInDBHandler();
+    handlerIni = logInDBHandler;
 }
 
 if(smsFlag){
     if(handlerIni === null){
-        handlerIni = new SMSHandler();
+        handlerIni = sMSHandler
     }else{
-        handlerIni = handlerIni.setNext(new SMSHandler());
+        handlerIni.setNext(sMSHandler);
     }
 }
 
 if(emailFlag){
     if(handlerIni === null){
-        handlerIni = new EmailHandler();
+        handlerIni = emailHandler
     }else{
-        handlerIni = handlerIni.setNext(new EmailHandler());
+        handlerIni.setNext(emailHandler);
     }
 }
 
 if(sendFlag){
     if(handlerIni === null){
-        handlerIni = new SendHandler();
+        handlerIni = sendHandler
     }else{
-        handlerIni = handlerIni.setNext(new SendHandler());
+        handlerIni.setNext(sendHandler);
     }
 }
 
