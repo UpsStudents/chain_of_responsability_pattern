@@ -10,7 +10,13 @@ abstract class AbstractHandler implements Handler
     private nextHandler: Handler | undefined;
 
     public setNext(handler: Handler): Handler {
-        this.nextHandler = handler;
+        if(this.nextHandler === undefined) {
+            this.nextHandler = handler;
+        }
+        else
+        {
+            this.nextHandler.setNext(handler);
+        }
         return handler;
     }
 
@@ -65,17 +71,17 @@ function Notification(handler: Handler) {
     for (const option of options) {
         const result = handler.handle(option);
         if (result) {
-            console.log(`  ${result}`);
+            console.log(`${result}`);
         } else {
-            console.log(` No handler for ${option}`);
+            console.log(` Not include ${option}`);
         }
     }
 }
 
 const logInDBFlag = true;
 const smsFlag = true;
-const emailFlag = true;
-const sendFlag = true;
+const emailFlag = false;
+const sendFlag = false;
 
 let handlerIni = null;
 
@@ -86,30 +92,30 @@ const sendHandler = new SendHandler();
 
 
 if(logInDBFlag){
-    handlerIni = logInDBHandler;
+    handlerIni = new LogInDBHandler();
 }
 
 if(smsFlag){
     if(handlerIni === null){
-        handlerIni = sMSHandler
+        handlerIni = new SMSHandler();
     }else{
-        handlerIni.setNext(sMSHandler);
+        handlerIni.setNext(new SMSHandler());
     }
 }
 
 if(emailFlag){
     if(handlerIni === null){
-        handlerIni = emailHandler
+        handlerIni = new EmailHandler();
     }else{
-        handlerIni.setNext(emailHandler);
+        handlerIni.setNext(new EmailHandler());
     }
 }
 
 if(sendFlag){
     if(handlerIni === null){
-        handlerIni = sendHandler
+        handlerIni = new SendHandler();
     }else{
-        handlerIni.setNext(sendHandler);
+        handlerIni.setNext(new SendHandler());
     }
 }
 
